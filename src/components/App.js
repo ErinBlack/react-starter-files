@@ -11,6 +11,7 @@ class App extends React.Component {
     fishes: {},
     order: {}
   };
+
   addFish = fish => {
     // 1. Take a copy of the existing state
     const fishes = { ...this.state.fishes };
@@ -19,10 +20,18 @@ class App extends React.Component {
     // 3. Set the new fishes object to state
     this.setState({ fishes });
   };
+
   loadSampleFishes = () => {
       console.log('loading sample');
       this.setState({fishes: sampleFishes});
+  };
+
+  addToOrder = (key) => {
+    const order = {...this.state.order};
+    order[key] = order[key] + 1 || 1;
+    this.setState({order});
   }
+
   render() {
     return (
       <div className="catch-of-the-day">
