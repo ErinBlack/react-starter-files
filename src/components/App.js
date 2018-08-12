@@ -76,9 +76,7 @@ class App extends React.Component {
   };
 
   deleteFromOrder = key => {
-    console.log('in deleteFromOrder with ', key);
     const order = { ...this.state.order };
-    console.log('order', order)
     delete order[key];
     this.setState({order})
   };
