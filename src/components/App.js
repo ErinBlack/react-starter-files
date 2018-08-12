@@ -11,26 +11,32 @@ class App extends React.Component {
     fishes: {},
     order: {}
   };
+
   componentDidMount() {
     const { params } = this.props.match;
+    // first reinstate our localStorage
     const localStorageRef = localStorage.getItem(params.storeId);
-    if(localStorageRef){
-      this.setState({order: JSON.parse(localStorageRef)});
+    if (localStorageRef) {
+      this.setState({ order: JSON.parse(localStorageRef) });
     }
+
     this.ref = base.syncState(`${params.storeId}/fishes`, {
       context: this,
       state: "fishes"
     });
   }
 
-  componentDidUpdate(){
-    localStorage.setItem(this.props.match.params.storeId, JSON.stringify(this.state.order));
+  componentDidUpdate() {
+    console.log(this.state.order);
+    localStorage.setItem(
+      this.props.match.params.storeId,
+      JSON.stringify(this.state.order)
+    );
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     base.removeBinding(this.ref);
   }
-
 
   addFish = fish => {
     // 1. Take a copy of the existing state
@@ -42,15 +48,20 @@ class App extends React.Component {
   };
 
   updateFish = (key, updatedFish) => {
-    const fishes = { ...this.state.fishes};
+    // 1. Take a copy of the current state
+    const fishes = { ...this.state.fishes };
+    // 2. Update that state
     fishes[key] = updatedFish;
+    // 3. Set that to state
+    this.setState({ fishes });
+  };
+
+  deleteFish = (key) => {
+    const fishes = {...this.state.fishes};
+    fishes[key] = null;
     this.setState({fishes});
   }
 
-  deleteFish = (key) => {
-
-  }
- 
   loadSampleFishes = () => {
     this.setState({ fishes: sampleFishes });
   };
@@ -85,7 +96,8 @@ class App extends React.Component {
           addFish={this.addFish}
           updateFish={this.updateFish}
           loadSampleFishes={this.loadSampleFishes}
-          fishes = {this.state.fishes}
+          fishes={this.state.fishes}
+          deleteFish={this.deleteFish}
         />
       </div>
     );
